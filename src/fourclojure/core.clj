@@ -38,3 +38,14 @@
 ;; shorter
 (#(= (seq %) (reverse (seq %))) '(1 2 1))
 (#(= (seq %) (reverse (seq %))) "helleh")
+
+;;28 flatten > pass
+
+;;29 get the caps
+(require 'clojure.string)
+(#(clojure.string/capitalize %) "HeLlO, WoRlD!")
+
+(#(re-seq #"[A-Z]" %) "HeLlO, WoRlD!")
+
+(#(apply str (re-seq #"[A-Z]" %)) "HeLlO, WoRlD!")
+
