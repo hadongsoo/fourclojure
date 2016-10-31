@@ -12,13 +12,15 @@
 
 (fibo* [1 3])
 
-(#(take 5 (map first (iterate fibo* [1 1]))))
+;;(#(take 5 (map first (iterate fibo* [1 1]))))
 
 
 ;;27 Palindrome Detector
 ;;seq make any Collection > seq
 
-(reverse seq '(1 2 3 4 5))
+;; (reverse seq '(1 2 3 4 5))
+
+ (reverse (seq '(1 2 3)))
 
 (seq '(1 2 3 4 5))
 
@@ -49,3 +51,20 @@
 
 (#(apply str (re-seq #"[A-Z]" %)) "HeLlO, WoRlD!")
 
+(#(apply str (re-seq #"[A-Z]" %)) "HeLlO, WoRlD!")
+
+(#(filter %)  "HeLlO, WoRlD!")
+
+(defn separate-dot [arg]
+  (re-seq #"\d" arg))
+
+(defn separate-space [arg]
+  (re-seq #"\w+" arg))
+
+(separate-dot "asdf asdf 1.1.5")
+(separate-space "asdf asdf 1.1.5")
+
+;; apply : collect items / map : doing each others
+;; re-seq
+
+(#(apply str (re-seq #"[A-Z]" %) "HeLlO, WoRlD!")
