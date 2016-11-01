@@ -67,4 +67,27 @@
 ;; apply : collect items / map : doing each others
 ;; re-seq
 
-(#(apply str (re-seq #"[A-Z]" %) "HeLlO, WoRlD!")
+;; (#(apply str (re-seq #"[A-Z]" %) "HeLlO, WoRlD!")
+
+
+
+;; 41 Drop Every Nth Item
+
+(def list1 [1 2 3 4 5 6 7 8 9 10 11])
+(partition-all 4 list1)
+
+(defn droppernth [arg nth]
+  (into [] (flatten (list (first (partition-all nth arg))
+  (map rest (rest (partition-all nth arg)))))))
+
+;;   (first (partition-all nth arg)) (map rest (partition-all nth arg)))
+
+(droppernth list1 3)
+
+(concat)
+
+(#(into []
+        (flatten (map rest (partition-all %2 (concat [0] %)))))
+  [:a :b :c :d :e :f] 2)
+;   [1 2 3 4 5 6 7 8] 3)
+; [1 2   4 5   7 8]
