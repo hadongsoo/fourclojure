@@ -98,3 +98,16 @@
 ; partition-all 의 스펙을 잘 모르는채로,
 ; 임의로 숫자 하나를 더 삽입해서 앞자리를 모두 없애는 방식으로 진행
 ; 스펙 자세히 보기가 중요한듯
+
+; nth* making
+
+(defn nth* [nthseq nthnum]
+;;   (first (first
+           (rest (partition (dec nthnum) nthseq))
+;;            ))
+  )
+
+(nth* "hello" 2)
+(nth* '(1 2 3 4 5) 2)
+
+
