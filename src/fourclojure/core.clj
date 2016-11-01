@@ -110,4 +110,18 @@
 (nth* "hello" 2)
 (nth* '(1 2 3 4 5) 2)
 
+; 42 Factorial Fun / 1, 3, 5, 6, 8
 
+(defn facto* [numb]
+  (if (= 1 numb)
+    1
+    (* numb (facto* (dec numb)))
+    )
+  )
+
+(facto* 8)
+
+
+;; 팩토리얼 재귀로 만들면 안됌. 포클로저에서 쓸려면 임시 함수로도 작동 가능해야함
+
+(* (range 1 9)
