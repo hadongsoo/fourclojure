@@ -1,26 +1,40 @@
 (ns fourclojure.core)
 
-
-(nth [1 2 3 4 5 6] 2)
-
-(((fn [f]
-  (fn [& args]
-    (apply f (reverse args))))
- nth) 2 [1 2 3 4 5])
+;;#44 Rotate Sequence
 
 
-(
-  (
-   ((fn [& f1]
-      (fn [f2]
-        (fn [f3]
-          (list f1 f2 f3)))) 1)
-  2)
- '(4 5 6))
+;(= (__ 2 [1 2 3 4 5]) '(3 4 5 1 2))
+;(= (__ 2 [1 2 3 4 5]) '(3 4 5 1 2))
+;(= (__ -2 [1 2 3 4 5]) '(4 5 1 2 3))
+;(= (__ 6 [1 2 3 4 5]) '(2 3 4 5 1))
+;(= (__ 1 '(:a :b :c)) '(:b :c :a))
+;(= (__ -4 '(:a :b :c)) '(:c :a :b))
 
-((fn [data & data2]
-  data)
-1 2 3 4)
 
-;; 함수 아규먼트가 한번 더 감싸지는 이유는, 첫번째 아규먼트 외엔 모두 한 콜렉션으로 처리되서 인듯
+((fn rotater [n coll]
+    (take (count coll) (drop (mod n (count coll)) (cycle coll))))
+ -6 [0 1 2 3 4 5])
+
+
+; I have to know to different 'mod' and 'rem'
+(mod 2 10)
+
+(mod 1 3)
+(mod -1 3)
+(mod -2 3)
+(mod -3 3)
+(mod -4 3)
+
+(rem 1 3)
+(rem -1 3)
+(rem -2 3)
+(rem -3 3)
+(rem -4 3)
+
+(rem -4 3)
+(rem -1 3)
+(rem -7 3)
+
+(mod -1 3)
+(rem -1 3)
 
