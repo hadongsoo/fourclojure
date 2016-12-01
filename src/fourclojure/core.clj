@@ -1,40 +1,14 @@
 (ns fourclojure.core)
 
-;;#44 Rotate Sequence
+;#46
+;(= 3 ((____ nth) 2 [1 2 3 4 5]))
 
+(((fn [f]
+   (fn [& arg]
+     (list f arg)
+     ))
+ nth) 2 '(1 2 3))
 
-;(= (__ 2 [1 2 3 4 5]) '(3 4 5 1 2))
-;(= (__ 2 [1 2 3 4 5]) '(3 4 5 1 2))
-;(= (__ -2 [1 2 3 4 5]) '(4 5 1 2 3))
-;(= (__ 6 [1 2 3 4 5]) '(2 3 4 5 1))
-;(= (__ 1 '(:a :b :c)) '(:b :c :a))
-;(= (__ -4 '(:a :b :c)) '(:c :a :b))
-
-
-((fn rotater [n coll]
-    (take (count coll) (drop (mod n (count coll)) (cycle coll))))
- -6 [0 1 2 3 4 5])
-
-
-; I have to know to different 'mod' and 'rem'
-(mod 2 10)
-
-(mod 1 3)
-(mod -1 3)
-(mod -2 3)
-(mod -3 3)
-(mod -4 3)
-
-(rem 1 3)
-(rem -1 3)
-(rem -2 3)
-(rem -3 3)
-(rem -4 3)
-
-(rem -4 3)
-(rem -1 3)
-(rem -7 3)
-
-(mod -1 3)
-(rem -1 3)
+; 함수 안에 함수로, 괄호 안 값 괄호 밖 값을 받을 활용할 수 있다.
+; & 앰퍼센트 arg는 여러 인자 값을 받을 수 있고, list 형태로 괄호가 한번 감싸져서 나온다.
 
