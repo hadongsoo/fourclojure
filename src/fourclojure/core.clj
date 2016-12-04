@@ -15,7 +15,7 @@
 (vals {:a 1 :b 2})
 ; vals 함수 알게 됌. 맵에서 값만 아웃풋
 
-((comp list (partial group-by type)) [:a "foo"  "bar" :b])
+((comp vals (partial group-by type)) [:a "foo"  "bar" :b])
 
 ((fn [arg]
   (group-by type arg))
