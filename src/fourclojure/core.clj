@@ -2,36 +2,19 @@
 
 ;#49 split a sequence
 
-(split-at 2 '(1 2 3 4 5))
+(#(list (into [] (take %1 %2))(into [] (drop %1 %2))) 3 [1 2 3 4 5 6])
+; take 와 drop 개념을 떠올림 1차 시도
 
-(#(split-at %1 %2) 3 [1 2 3 4 5 6])
-(nth [1 2 3 4 5 6] 3)
+(defn split-at* [pred coll]
+  [(take pred coll)(drop pred coll)] )
 
-((fn test [pred coll]
-   (fn test2 [pred coll]
-     (list pred coll)
-;;      (nth coll pred)
-     )
-;;    (split-with
-;;      (fn (nth coll pred))
-;;      coll))
-   )
-3 '(1 2 3 4 5))
+(split-at* 3 [1 2 3 4 5])
 
-((fn [pred coll]
-  (fn [pred coll]
-    (list pred coll)
-    ))
-3 '(1 2 3 4 5))
+; defn 함수 형태로 먼저 만들어봄
 
+(fn [pred coll]
+  [(take pred coll)(drop pred coll)])
 
-;; (fn newsplit [pred coll]
-;;      (split-with fn(nth coll pred) coll))
-;;   3 [1 2 3 4 5])
-
-(split-with fn(nth [1 2 3 4 5] 3) [1 2 3 4 5])
-
-; split-with 를 활용해서 중간에 함수를 넣어서 작동하게 하고 싶었으나, 함수 안 함수 개념에서 막힘
-
+; short version
 
 
