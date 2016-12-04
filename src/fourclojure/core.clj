@@ -1,14 +1,17 @@
 (ns fourclojure.core)
 
-;#46
-;(= 3 ((____ nth) 2 [1 2 3 4 5]))
+;#47
+;(contains? #{4 5 6} __)
+;(contains? [1 1 1 1 1] __)
+;(contains? {4 :a 2 :b} __)
+;(not (contains? [1 2 4] __))
 
-(((fn [f]
-   (fn [& arg]
-     (list f arg)
-     ))
- nth) 2 '(1 2 3))
+(contains? #{4 5 6} 4)
+(contains? [1 1 1 1 1] 4)
+(not (contains? [1 1 1 1 4] 4))
+(contains? [1 1 1 1 1] 1)
+(not (contains? [1 1 1 1 4] 2))
 
-; 함수 안에 함수로, 괄호 안 값 괄호 밖 값을 받을 활용할 수 있다.
-; & 앰퍼센트 arg는 여러 인자 값을 받을 수 있고, list 형태로 괄호가 한번 감싸져서 나온다.
+(contains? [1 2 4] 0)
 
+; contains은 맵/해쉬맵 등에만 작동되고, 배열에는 배열 갯수와 관련해서 작동하는 듯 하다.
