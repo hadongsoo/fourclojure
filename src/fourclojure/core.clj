@@ -1,20 +1,26 @@
 (ns fourclojure.core)
 
-;#49 split a sequence
+;#50 split by type
+(type [1 2 3 4])
 
-(#(list (into [] (take %1 %2))(into [] (drop %1 %2))) 3 [1 2 3 4 5 6])
-; take 와 drop 개념을 떠올림 1차 시도
+(#(= (type %1) (type %2)) :b :a)
 
-(defn split-at* [pred coll]
-  [(take pred coll)(drop pred coll)] )
+;; (partition-by (fn [& arg](arg))
+;;     [:a "foo"  "bar" :b]
 
-(split-at* 3 [1 2 3 4 5])
+;; (fn (partial list) [:a "foo"  "bar" :b])
 
-; defn 함수 형태로 먼저 만들어봄
+; comp 와 partial 의 개념 알게 됌.
 
-(fn [pred coll]
-  [(take pred coll)(drop pred coll)])
+(vals {:a 1 :b 2})
+; vals 함수 알게 됌. 맵에서 값만 아웃풋
 
-; short version
+((comp list (partial group-by type)) [:a "foo"  "bar" :b])
 
+((fn [arg]
+  (group-by type arg))
+[:a "foo"  "bar" :b])
 
+; 타입별로 그룹화 해서 출력, 하면 항목 값으로 나뉘어진 맵 출력, comp vals로 값만 다시 뿌린다.
+
+; group-by 는 f coll 인자로 f 함수에 맞는 항목만 coll에서 나눠준다
