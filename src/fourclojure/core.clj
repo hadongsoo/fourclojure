@@ -1,17 +1,11 @@
 (ns fourclojure.core)
 
-;#47
-;(contains? #{4 5 6} __)
-;(contains? [1 1 1 1 1] __)
-;(contains? {4 :a 2 :b} __)
-;(not (contains? [1 2 4] __))
+;#48 some
+(some #{2 3} '(1 2 3 4 5))
+(some #(when (even? %) %) [5 6 7 8])
 
-(contains? #{4 5 6} 4)
-(contains? [1 1 1 1 1] 4)
-(not (contains? [1 1 1 1 4] 4))
-(contains? [1 1 1 1 1] 1)
-(not (contains? [1 1 1 1 4] 2))
+;some 말 그대로. 하나라도 있으면, 이라는 의미인듯.
+;해쉬 맵의 마지막 수치를 다음 리스트에서 찾아서 일치하면 바로 아웃풋
 
-(contains? [1 2 4] 0)
 
-; contains은 맵/해쉬맵 등에만 작동되고, 배열에는 배열 갯수와 관련해서 작동하는 듯 하다.
+
