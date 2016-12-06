@@ -22,3 +22,9 @@
 (let [[a b & c :as d] [1 2 3 4 5]] [a b c d])
 
 
+
+
+(let [[a b c d e :as home] [0 1 2 3 4]] home)
+
+(let [[a b c d e :or home] [0 1 2 3 4]]
+  home)
