@@ -1,18 +1,10 @@
 (ns fourclojure.core)
 
-;; #145 for
+;; #161 subset, superset
 
+(clojure.set/superset? #{1} #{2})
 
-(for [x (range 40) :when (= 1 (rem x 4))]
-  x)
+(clojure.set/subset? #{1} #{1 2})
+(clojure.set/superset? #{1 2} #{2})
 
-
-(for [x (iterate #(+ 4 %) 0)
-      :let [z (inc x)]
-      :while (< z 40)]
-  z)
-
-(for [[x y] (partition 2 (range 20))]
-  (list x y))
-
-;; for는 그냥 많이 써봐야 할듯 let, while도 그렇고
+;; 부분집합 그리고 확대?집합인듯 개념은 어렵지 않다.
