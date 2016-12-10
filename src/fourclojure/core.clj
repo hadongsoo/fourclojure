@@ -1,30 +1,30 @@
 (ns fourclojure.core)
 
-;#51 Advanced destructure
+;# 134 nil 키값 검사하기 //초급중급순으로 난이도 변경
+
+;; (true?  (__ :a {:a nil :b 2}))
+;; (false? (__ :b {:a nil :b 2}))
+;; (false? (__ :c {:a nil :b 2}))
 
 
-;; [a b & c :as d]
+((fn [valdata coll]
+   (if (contains? coll valdata)
+     (= nil (val (find coll valdata)))
+     false))
+;;    (= nil (val coll)))
+:a {:a nil :b 2})
+;; :a {:a nil :b 2})
 
-(range 1 6)
-
-[1 2 [3 4 5] [1 2 3 4 5]]
-
-(let [[a b & c :as e] [1 2 3 4 5 6 7]]
-  [a b c e])
-
-
-(let [{a :a, b :b, c :c, :as m :or {a 2 b 3}}  {:a 5}]
-  [a b c m])
-
-; destructure 구조를 알게 하려는 예제,
-; 1~5까지 let 화 시키면 (let [[a b & c :as e] [1 2 3 4 5]] [a b c d e])
-
-(let [[a b & c :as d] [1 2 3 4 5]] [a b c d])
+(contains? {:a nil :b 2} :c)
 
 
+;; contains? 과 find에 대해 알게 됐다. val 또한..
 
 
-(let [[a b c d e :as home] [0 1 2 3 4]] home)
+;;   ((fn [valdata coll]
+;;      (if (contains? coll valdata)
+;;        (= (coll valdata) nil)
+;;        false))
+;;   :c {:a nil :b 2})
 
-(let [[a b c d e :or home] [0 1 2 3 4]]
-  home)
+;; 맵 뒤에 키가 있으면 값을 뱉어내준다. find val 등 함수를 사용하지 않아도 된다.
