@@ -1,5 +1,5 @@
 (ns fourclojure.core)
 
-;; #19 last / 다시
+;; #20 penultimate 개선 > 끝에서 두번째 출력하기
 
-(#(first (reverse %)) [1 2 3 4 5])
+(#(second (reverse %)) ["a" "b" "c"])
