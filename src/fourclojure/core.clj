@@ -1,10 +1,13 @@
 (ns fourclojure.core)
 
-;; #161 subset, superset
+;; #156 map default
 
-(clojure.set/superset? #{1} #{2})
+(#(apply hash-map (interleave %2 (repeat %1)))
+0 [:a :b :c])
 
-(clojure.set/subset? #{1} #{1 2})
-(clojure.set/superset? #{1 2} #{2})
+((fn [va coll]
+   (map #(list % va) coll))
+0 [:a :b :c])
 
-;; 부분집합 그리고 확대?집합인듯 개념은 어렵지 않다.
+;; interleave와 repeat 눈치로만 알겠고, 이해가 어려움
+
