@@ -1,16 +1,11 @@
 (ns fourclojure.core)
 
-;; #27 Palindrome Detector
+;; #26 Fibonacci Sequence
 
-;; (false? (__ '(1 2 3 4 5)))
-;; (true? (__ "racecar"))
-;; (true? (__ [:foo :bar :foo]))
-;; (true? (__ '(1 1 3 3 1 1)))
-;; (false? (__ '(:a :b :c)))
+;; (= (__ 3) '(1 1 2))
+;; (= (__ 6) '(1 1 2 3 5 8))
+;; (= (__ 8) '(1 1 2 3 5 8 13 21))
 
+(#(take % (map first (iterate (fn [[a b]] [b (+ a b)]) [1 1]))) 6)
 
-(#(= (map str (reverse %)) (map str %)) "racecar")
-(#(list (seq (reverse %)) (seq %)) "racecar")
-
-;; str로 바꾸는 것은 오류가 있음
-;; 기존에 seq가 훨씬 나음
+;; 피보나치는 아직도 헷갈린다. iterate는 (함수 (함수 (함수 인자))) 인걸 좀 이해했지만 아직 헷갈림
