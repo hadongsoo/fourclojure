@@ -1,11 +1,40 @@
 (ns fourclojure.core)
 
-;; #26 Fibonacci Sequence
+;; #38 Maximum value
 
-;; (= (__ 3) '(1 1 2))
-;; (= (__ 6) '(1 1 2 3 5 8))
-;; (= (__ 8) '(1 1 2 3 5 8 13 21))
+;; (= (__ 1 8 3 4) 8)
+;; (= (__ 1 8 3 4) 8)
+;; (= (__ 30 20) 30)
+;; (= (__ 45 67 11) 67)
+;; (= (__ 45 67 11) 67)
 
-(#(take % (map first (iterate (fn [[a b]] [b (+ a b)]) [1 1]))) 6)
+(#(last (sort %&)) 45 67 11)
 
-;; 피보나치는 아직도 헷갈린다. iterate는 (함수 (함수 (함수 인자))) 인걸 좀 이해했지만 아직 헷갈림
+
+;; #29 Get the Caps
+
+;; (= (__ "HeLlO, WoRlD!") "HLOWRD")
+;; (empty? (__ "nothing"))
+;; (= (__ "$#A(*&987Zf") "AZ")
+
+
+(apply str (re-seq #"[A-Z]" "HeLlO, WoRlD!"))
+
+;; 정규표현식을 간단하게만 써서 대문자만 추출하는 방법
+;; 언제나 정규표현식은 헷갈린다. 유용한 간단한건 알아두면 좋을듯.
+
+(defn capital? [stragr]
+  (if (string? stragr)
+    (if (re-seq #"[A-Z]" (str (first stragr))) true false)
+    false))
+
+(capital? "ABc")
+(capital? "3")
+(capital? 4)
+
+(filter capital? [1 2 3 4 ])
+
+(filter capital? ["3" "A" "a" "C"])
+
+;; 공부 재개하고 첨 만들어본 함수. 내부에 (str (first xxxx)) 형식은 개선해야할듯 하다.
+
