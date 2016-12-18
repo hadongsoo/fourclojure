@@ -1,40 +1,26 @@
 (ns fourclojure.core)
 
-;; #38 Maximum value
+;; 32 Duplicate a Sequence
 
-;; (= (__ 1 8 3 4) 8)
-;; (= (__ 1 8 3 4) 8)
-;; (= (__ 30 20) 30)
-;; (= (__ 45 67 11) 67)
-;; (= (__ 45 67 11) 67)
+;; (= (__ [1 2 3]) '(1 1 2 2 3 3))
+;; (= (__ [:a :a :b :b]) '(:a :a :a :a :b :b :b :b))
+;; (= (__ [[1 2] [3 4]]) '([1 2] [1 2] [3 4] [3 4]))
+;; (= (__ [[1 2] [3 4]]) '([1 2] [1 2] [3 4] [3 4]))
 
-(#(last (sort %&)) 45 67 11)
+(#(flatten (map (fn [& arg] (list arg arg)) %)) [[1 2] [3 4]])
 
+;; 단순하게 생각해서, 맵으로 데이터를 2개로 다시 뿌려주는걸 생각했는데, 중첩구조를 계산하지 못했다.
 
-;; #29 Get the Caps
+(mapcat #(list % %) [[1 2] [3 4]])
 
-;; (= (__ "HeLlO, WoRlD!") "HLOWRD")
-;; (empty? (__ "nothing"))
-;; (= (__ "$#A(*&987Zf") "AZ")
+;; 나은 답변. mapcat으로 반복될 구조의 함수로 map화 + concat 해서 mapcat 사용
 
+(apply + [1 2 3 4 5])
+(+ 1 2 3 4 5)
 
-(apply str (re-seq #"[A-Z]" "HeLlO, WoRlD!"))
+(reduce + [1 2 3 4 5])
+(concat ["a" "b" 1] "a" [1] [:a :b] {:a 1 :b 2})
 
-;; 정규표현식을 간단하게만 써서 대문자만 추출하는 방법
-;; 언제나 정규표현식은 헷갈린다. 유용한 간단한건 알아두면 좋을듯.
+(+ (+ (+ (+ 1 2) 3) 4) 5)
 
-(defn capital? [stragr]
-  (if (string? stragr)
-    (if (re-seq #"[A-Z]" (str (first stragr))) true false)
-    false))
-
-(capital? "ABc")
-(capital? "3")
-(capital? 4)
-
-(filter capital? [1 2 3 4 ])
-
-(filter capital? ["3" "A" "a" "C"])
-
-;; 공부 재개하고 첨 만들어본 함수. 내부에 (str (first xxxx)) 형식은 개선해야할듯 하다.
-
+(map inc [1 2 3 4 5])
