@@ -1,19 +1,19 @@
 (ns fourclojure.core)
 
-;; #42 factorial
+;; #30 compress a Sequence
 
-;; (= (__ 1) 1)
-;; (= (__ 3) 6)
-;; (= (__ 5) 120)
-;; (= (__ 8) 40320)
+;; (= (apply str (__ "Leeeeeerrroyyy")) "Leroy")
+;; (= (__ [1 1 2 3 3 2 2 3]) '(1 2 3 2 3))
+;; (= (__ [[1 2] [1 2] [3 4] [1 2]]) '([1 2] [3 4] [1 2]))
 
+(apply str (map first (partition-by identity "Leeeeeerrroyyy")))
 
-(#(apply * (range 1 (inc %))) 8)
+#(map first (partition-by identity %))
 
+;; contains?
 
-((fn [val1]
-   (reduce * (range 1 (inc val1)))) 8)
+(contains? [1 2 3 4 5] 1)
 
-
-
-;; factorial이 더하긴줄 알았다. 문제를 정확히 파악하는 것도 중요.
+(contains? [:a :b :c :d] :a)
+(contains? [:a :b :c :d] 1)
+(contains? [:a :b :c :d] 0)
