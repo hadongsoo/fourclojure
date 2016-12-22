@@ -1,19 +1,56 @@
 (ns fourclojure.core)
 
-;; #30 compress a Sequence
+;; false
 
-;; (= (apply str (__ "Leeeeeerrroyyy")) "Leroy")
-;; (= (__ [1 1 2 3 3 2 2 3]) '(1 2 3 2 3))
-;; (= (__ [[1 2] [1 2] [3 4] [1 2]]) '([1 2] [3 4] [1 2]))
+(boolean "string")
+(boolean 0)
+(boolean 1)
+(boolean nil)
+(boolean false)
+(boolean [])
+(boolean {})
 
-(apply str (map first (partition-by identity "Leeeeeerrroyyy")))
+(if -1
+  true
+  false)
 
-#(map first (partition-by identity %))
+(defn teen? [n]
+    (and (> 20 n) (< 9 n)))
 
-;; contains?
+(teen? 8)
+(teen? 11)
+(teen? 22)
 
-(contains? [1 2 3 4 5] 1)
+(defn not-teen? [n]
+  ((complement teen?) n))
 
-(contains? [:a :b :c :d] :a)
-(contains? [:a :b :c :d] 1)
-(contains? [:a :b :c :d] 0)
+(not-teen? 8)
+(not-teen? 11)
+(not-teen? 22)
+
+
+(defn abs [n]
+  (when (number? n)
+    (if (> 0 n)
+      (* -1 n)
+      n)))
+
+(abs 0)
+
+
+(defn leap-year? [numb]
+  (when (number? numb)
+    (and
+      (= 0 (mod numb 4))
+      (or (= 0 (mod numb 400))
+          (not (= 0 (mod numb 100))))
+      )))
+
+(leap-year? 100)
+(leap-year? 100) ;=> false
+(leap-year? 200) ;=> false
+(leap-year? 400) ;=> true
+(leap-year? 12)  ;=> true
+(leap-year? 20)  ;=> true
+(leap-year? 15)  ;=> false
+
