@@ -1,52 +1,31 @@
 (ns fourclojure.core)
 
-(def book {:title "The City and the City"
-           :authors [{:name "China Miéville", :birth-year 1972}]
-           :test {:test-nest "keykeykye"}})
-
-(val (first (first (get book :authors)))) ;=> "The City and the City"
-
-(get-in book [:test :test-nest])
+;; (defn add-author [coll x]
+;;   (let [[x] coll]
+;;   (list coll x)))
 
 
-(:title book)
-
-(:name book)
-
-
-(def china {:name "China Miéville", :birth-year 1972})
-(def octavia {:name "Octavia E. Butler"
-              :birth-year 1947
-              :death-year 2006})
-(def friedman {:name "Daniel Friedman" :birth-year 1944})
-(def felleisen {:name "Matthias Felleisen"})
-
-(def cities {:title "The City and the City" :authors [china]})
-(def wild-seed {:title "Wild Seed", :authors [octavia]})
-(def embassytown {:title "Embassytown", :authors [china]})
 (def little-schemer {:title "The Little Schemer"
-                     :authors [friedman, felleisen]})
+    :authors [{:birth-year 1944, :name "Daniel Friedman"}
+              {:name "Matthias Felleisen"}]})
 
-(defn title-length [coll]
-  (count (:title coll)))
+;; (add-author little-schemer {:name "Gerald J. Sussman"})
+;=> {:title "The Little Schemer"
+;    :authors [{:birth-year 1944, :name "Daniel Friedman"}
+;              {:name "Matthias Felleisen"}
+;              {:name "Gerald J. Sussman"}]}
+;; (add-author {:authors [{:name "Juhana"}]} {:name "Jani"})
+;=> {:authors [{:name "Juhana"} {:name "Jani"}]}
 
-(title-length cities)         ;=> 21
-(title-length wild-seed)      ;=> 9
-(title-length little-schemer) ;=> 18
+(def testcoll {:a 123 :b [{:c 456 :d 789}]})
+
+(defn add-author [coll kwrd]
+    (assoc coll :authors (conj (:authors coll) kwrd)))
+
+(add-author little-schemer {:name "Gerald J. Sussman"})
+(add-author {:authors [{:name "Juhana"}]} {:name "Jani"})
+(assoc little-schemer :authors  (conj []{:name "dongsoo"}))
 
 
-(defn author-count [coll]
-  (count (:authors coll)))
-
-(author-count cities)         ;=> 1
-(author-count wild-seed)      ;=> 1
-(author-count little-schemer) ;=> 2
-
-(defn multiple-authors? [coll]
-  (if (second (:authors coll))
-              true
-              false))
-
-(multiple-authors? cities)         ;=> false
-(multiple-authors? wild-seed)      ;=> false
-(multiple-authors? little-schemer) ;=> true
+;; conj로 기존 데이터 + 새값 합치고, 그걸 assoc로 위치 지정해준다.
+;; 기존 데이터를 다시 넣는 방법에 대해서 고민했음
