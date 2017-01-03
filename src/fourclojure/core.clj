@@ -1,132 +1,187 @@
 (ns fourclojure.core)
 
-(def china {:name "China Miéville", :birth-year 1972})
-(def octavia {:name "Octavia E. Butler"
-              :birth-year 1947
-              :death-year 2006})
-(def friedman {:name "Daniel Friedman" :birth-year 1944})
-(def felleisen {:name "Matthias Felleisen"})
+(defn suit [trumpcde]
+  (let [[_ valsecond] trumpcde]
+    (str valsecond)))
 
-(def cities {:title "The City and the City" :authors [china]})
-(def wild-seed {:title "Wild Seed", :authors [octavia]})
-(def embassytown {:title "Embassytown", :authors [china]})
-(def little-schemer {:title "The Little Schemer"
-                     :authors [friedman, felleisen]})
+(suit "2H") ;=> "H"
+(suit "2D") ;=> "D"
+(suit "2C") ;=> "C"
+(suit "3S") ;=> "S"
 
-(defn alive? [namek]
-  (if (contains? namek :death-year) false true))
-
-(alive? friedman)
-
-(alive? china)   ;=> true
-(alive? octavia) ;=> false
+(defn rank [trumpcode]
+  (let [[valfirst _] trumpcode
+        repl {\T 10 \J 11 \Q 12 \K 13 \A 14 }]
+    (if (get repl valfirst)
+      (get repl valfirst)
+      (read-string (str valfirst)))))
 
 
-(def books [cities, wild-seed, embassytown, little-schemer])
+(rank "2H") ;=> 2
+(rank "4S") ;=> 4
+(rank "TS") ;=> 10
+(rank "JS") ;=> 11
+(rank "QS") ;=> 12
+(rank "KS") ;=> 13
+(rank "AS") ;=> 14
 
-(seq [1 2 3])          ;=> (1 2 3)
-(seq {:a 42 :b "foo" :c ["ur" "dad"]})
-                       ;=> ([:a 42] [:c ["ur" "dad"]] [:b "foo"])
-(first (seq [1 2 3]))  ;=> 1
-(rest (seq [1 2 3]))    ;=> (2 3)
-(cons 0 (seq [1 2 3])) ;=> (0 1 2 3)
+(frequencies [4 7 7 4 7]) ;=> {4 2, 7 3}
 
-(seq [1 2 3])
-(seq #{:a :b :c})
+(vals (frequencies [4 7 7 4 7]))
+;=> (2 3)
+;   ^-- now that looks a lot like a full house
 
-(defn element-lengths [coll]
-  (map count coll))
-
-(element-lengths ["foo" "bar" "" "quux"])  ;=> (3 3 0 4)
-(element-lengths ["x" [:a :b :c] {:y 42}]) ;=> (1 3 1)
-
-;; 맵 : 맵,함수,콜렉션 = 함수 다 적용한 콜렉션으로 출력.
-;; (count {:a 1}) 1 이라니...
-
-(defn second-elements [coll]
-  (let [sec* (fn [x](second x))]
-  (map sec* coll)))
-
-(second-elements [[1 2] [2 3] [3 4]]) ;=> (2 3 4)
-(second-elements [[1 2 3 4] [1] ["a" "s" "d" "f"]])
-;=> (2 nil "s")
+(max 1 5 4 2) ;=> 5
+(min 1 5 4 2) ;=> 1
 
 
-(def china {:name "China Miéville", :birth-year 1972})
-(def octavia {:name "Octavia E. Butler"
-              :birth-year 1947
-              :death-year 2006})
-(def friedman {:name "Daniel Friedman" :birth-year 1944})
-(def felleisen {:name "Matthias Felleisen"})
+(def high-seven ["2H" "3S" "4C" "5C" "7D"])
 
-(def cities {:title "The City and the City" :authors [china]})
-(def wild-seed {:title "Wild Seed", :authors [octavia]})
-(def embassytown {:title "Embassytown", :authors [china]})
-(def little-schemer {:title "The Little Schemer"
-                     :authors [friedman, felleisen]})
-
-(def books [cities, wild-seed, embassytown, little-schemer])
-
-(defn titles [coll]
-  (if (contains? coll :title)
-    (:title coll)
-    (map :title coll)))
-
-(titles [cities]) ;=> ("The City and the City" )
-(titles books)
-;=> ("The City and the City" "Wild Seed"
-;    "Embassytown" "The Little Schemer")
-
-
-(defn author-names [book]
-;;   (map :name (:authors book)))
-  (map :name (:authors book)))
-
-(author-names cities)
-
-(defn all-author-names [books]
-  (set (apply concat (map author-names books))))
-
-(all-author-names books)
-
-(set '(1 2 3))
-(set [1 2 3])
-
-
-(repeat 5 "*") ;=> ("*" "*" "*" "*" "*")
-(repeat 3 "~o~") ;=> ("~o~" "~o~" "~o~")
-
-(defn stars [numb]
-  (repeat numb "*"))
-
-(stars 1) ;=> "*"
-(stars 7) ;=> "*******"
-(stars 3) ;=> "***"
-
-(defn monotonic? [coll]
-  (or (apply >= coll) (apply <= coll)))
-
-(monotonic? [1 2 3])     ;=> true
-(monotonic? [0 1 10 11]) ;=> true
-(monotonic? [3 2 0 -3])  ;=> true
-(monotonic? [3 2 2])     ;=> true    Not strictly monotonic
-(monotonic? [1 2 1 0])   ;=> false
-
-
-(defn toggle [coll ke]
-  (if (contains? coll ke)
-    (disj coll ke)
-    (conj coll ke)))
-
-(toggle #{:a :b :c} :d) ;=> #{:a :c :b :d}
-(toggle #{:a :b :c} :a) ;=> #{:c :b}
-
+(def high-seven                   ["2H" "3S" "4C" "5C" "7D"])
+(def pair-hand                    ["2H" "2S" "4C" "5C" "7D"])
+(def two-pairs-hand               ["2H" "2S" "4C" "4D" "7D"])
+(def three-of-a-kind-hand         ["2H" "2S" "2C" "4D" "7D"])
+(def four-of-a-kind-hand          ["2H" "2S" "2C" "2D" "7D"])
+(def straight-hand                ["2H" "3S" "6C" "5D" "4D"])
+(def low-ace-straight-hand        ["2H" "3S" "4C" "5D" "AD"])
+(def high-ace-straight-hand       ["TH" "AS" "QC" "KD" "JD"])
+(def flush-hand                   ["2H" "4H" "5H" "9H" "7H"])
+(def full-house-hand              ["2H" "5D" "2D" "2C" "5S"])
+(def straight-flush-hand          ["2H" "3H" "6H" "5H" "4H"])
+(def low-ace-straight-flush-hand  ["2D" "3D" "4D" "5D" "AD"])
+(def high-ace-straight-flush-hand ["TS" "AS" "QS" "KS" "JS"])
 
 (defn contains-duplicates? [coll]
-  (if (= (count coll) (count (set coll)))
-         false
-         true))
+  (if-not (= (count (set coll))(count coll)) true false))
 
 (contains-duplicates? [1 1 2 3 -40]) ;=> true
 (contains-duplicates? [1 2 3 -40]) ;=> false
 (contains-duplicates? [1 2 3 "a" "a"]) ;=> true
+
+(defn pairchecker [coll]
+  (reverse (sort (vals (frequencies (map rank coll))))))
+
+(pairchecker pair-hand)
+(pairchecker two-pairs-hand)
+(pairchecker high-seven)
+
+
+(defn pair? [collname]
+  (let [pair-data '(2 1 1 1)
+        isit (fn [coll] (if (= coll pair-data) true false))]
+  (isit (pairchecker (map rank collname)))))
+
+(defn three-of-a-kind? [collname]
+  (let [pair-data '(3 1 1)
+        isit (fn [coll] (if (= coll pair-data) true false))]
+  (isit (pairchecker (map rank collname)))))
+
+;; (three-of-a-kind? two-pairs-hand)       ;=> false
+;; (three-of-a-kind? three-of-a-kind-hand) ;=> true
+
+(defn four-of-a-kind? [collname]
+  (let [pair-data '(4 1)
+        isit (fn [coll] (if (= coll pair-data) true false))]
+  (isit (pairchecker (map rank collname)))))
+
+
+
+(four-of-a-kind? two-pairs-hand)      ;=> false
+(four-of-a-kind? four-of-a-kind-hand) ;=> true
+
+(defn flush? [collname]
+  (if (= 1 (count (set (map suit collname)))) true false))
+
+(flush? pair-hand)  ;=> false
+(flush? flush-hand) ;=> true)
+
+
+(defn full-house? [collname]
+  (let [pair-data '(3 2)
+        isit (fn [coll] (if (= coll pair-data) true false))]
+  (isit (pairchecker (map rank collname)))))
+
+(full-house? three-of-a-kind-hand) ;=> false
+(full-house? full-house-hand)      ;=> true
+
+(defn two-pairs? [collname]
+  (let [pair-data ['(2 2 1) '(4 1)]
+        isit (fn [coll] (if (or (= coll (first pair-data))(= coll (second pair-data))) true false))]
+  (isit (pairchecker (map rank collname)))))
+
+
+(two-pairs? two-pairs-hand)      ;=> true
+(two-pairs? pair-hand)           ;=> false
+(two-pairs? four-of-a-kind-hand) ;=> true
+
+
+(defn straight? [coll]
+  (let [colldata (sort (map rank coll))
+        mindata (apply min colldata)
+        maxdata (inc (apply max colldata))
+        fullrange (range mindata maxdata)]
+    (if (or (= colldata fullrange)
+            (= colldata '(2 3 4 5 14)))
+      true
+      false)))
+
+(straight? two-pairs-hand)             ;=> false
+(straight? straight-hand)              ;=> true
+(straight? low-ace-straight-hand)      ;=> true
+(straight? ["2H" "2D" "3H" "4H" "5H"]) ;=> false
+(straight? high-ace-straight-hand)     ;=> true
+
+(defn straight-flush? [coll]
+  (and (straight? coll) (flush? coll)))
+
+(straight-flush? straight-hand)                ;=> false
+(straight-flush? flush-hand)                   ;=> false
+(straight-flush? straight-flush-hand)          ;=> true
+(straight-flush? low-ace-straight-flush-hand)  ;=> true
+(straight-flush? high-ace-straight-flush-hand) ;=> true
+
+(defn high-card? [hand]
+  true) ; All hands have a high card.
+
+(defn value [coll]
+  (let [checkers #{[high-card? 0]  [pair? 1]
+                 [two-pairs? 2]  [three-of-a-kind? 3]
+                 [straight? 4]   [flush? 5]
+                 [full-house? 6] [four-of-a-kind? 7]
+                 [straight-flush? 8]}
+        funcs [map first checkers]
+        firstfuncs (second funcs)]
+;;     ((fn [funcsdata coll] (list funcsdata coll))
+;;     firstfuncs coll)
+;;     (list flush? "hello" firstfuncs)
+;;         (nth funcs 2)
+;;     (first (last funcs))
+      (type straight?)
+      (type (first checkers))
+      (last funcs)
+
+    ))
+
+
+(def minifunc (map first #{[straight? 1] [two-pairs? 4]}))
+(type minifunc)
+
+;; (map (fn [mif]
+;; ;;        (apply mif pair-hand))
+;; ;;        (apply mif pair-hand))
+;; ;;        (mif pair-hand))
+;; ;;        (list `mif "/" two-pairs?)
+;;      (`mif two-pairs-hand))
+;;      minifunc)
+
+(two-pairs? two-pairs-hand)
+
+(value high-seven)           ;=> 0
+(value pair-hand)            ;=> 1
+(value two-pairs-hand)       ;=> 2
+(value three-of-a-kind-hand) ;=> 3
+(value straight-hand)        ;=> 4
+(value flush-hand)           ;=> 5
+(value full-house-hand)      ;=> 6
+(value four-of-a-kind-hand)  ;=> 7
+(value straight-flush-hand)  ;=> 8
