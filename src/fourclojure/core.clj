@@ -1,41 +1,4 @@
-(ns fourclojure.core)
-
-(defn suit [trumpcde]
-  (let [[_ valsecond] trumpcde]
-    (str valsecond)))
-
-(suit "2H") ;=> "H"
-(suit "2D") ;=> "D"
-(suit "2C") ;=> "C"
-(suit "3S") ;=> "S"
-
-(defn rank [trumpcode]
-  (let [[valfirst _] trumpcode
-        repl {\T 10 \J 11 \Q 12 \K 13 \A 14 }]
-    (if (get repl valfirst)
-      (get repl valfirst)
-      (read-string (str valfirst)))))
-
-
-(rank "2H") ;=> 2
-(rank "4S") ;=> 4
-(rank "TS") ;=> 10
-(rank "JS") ;=> 11
-(rank "QS") ;=> 12
-(rank "KS") ;=> 13
-(rank "AS") ;=> 14
-
-(frequencies [4 7 7 4 7]) ;=> {4 2, 7 3}
-
-(vals (frequencies [4 7 7 4 7]))
-;=> (2 3)
-;   ^-- now that looks a lot like a full house
-
-(max 1 5 4 2) ;=> 5
-(min 1 5 4 2) ;=> 1
-
-
-(def high-seven ["2H" "3S" "4C" "5C" "7D"])
+(ns p-p-p-pokerface)
 
 (def high-seven                   ["2H" "3S" "4C" "5C" "7D"])
 (def pair-hand                    ["2H" "2S" "4C" "5C" "7D"])
@@ -51,130 +14,122 @@
 (def low-ace-straight-flush-hand  ["2D" "3D" "4D" "5D" "AD"])
 (def high-ace-straight-flush-hand ["TS" "AS" "QS" "KS" "JS"])
 
-(defn contains-duplicates? [coll]
-  (if-not (= (count (set coll))(count coll)) true false))
+(def rank->integer {\T 10,
+                    \J 11,
+                    \Q 12,
+                    \K 13,
+                    \A 14})
 
-(contains-duplicates? [1 1 2 3 -40]) ;=> true
-(contains-duplicates? [1 2 3 -40]) ;=> false
-(contains-duplicates? [1 2 3 "a" "a"]) ;=> true
+(defn rank [card]
+  (let [[r _] card]
+    (if (Character/isDigit r)
+      (Integer/valueOf (str r))
+      (rank->integer r))))
 
-(defn pairchecker [coll]
-  (reverse (sort (vals (frequencies (map rank coll))))))
-
-(pairchecker pair-hand)
-(pairchecker two-pairs-hand)
-(pairchecker high-seven)
-
-
-(defn pair? [collname]
-  (let [pair-data '(2 1 1 1)
-        isit (fn [coll] (if (= coll pair-data) true false))]
-  (isit (pairchecker (map rank collname)))))
-
-(defn three-of-a-kind? [collname]
-  (let [pair-data '(3 1 1)
-        isit (fn [coll] (if (= coll pair-data) true false))]
-  (isit (pairchecker (map rank collname)))))
-
-;; (three-of-a-kind? two-pairs-hand)       ;=> false
-;; (three-of-a-kind? three-of-a-kind-hand) ;=> true
-
-(defn four-of-a-kind? [collname]
-  (let [pair-data '(4 1)
-        isit (fn [coll] (if (= coll pair-data) true false))]
-  (isit (pairchecker (map rank collname)))))
+(defn suit [card]
+  (let [[_ s] card]
+    (str s)))
 
 
+(defn pair? [hand]
+  (let [ranks (map rank hand)
+        freqs (vals (frequencies ranks))]
+    (= (apply max freqs) 2)))
 
-(four-of-a-kind? two-pairs-hand)      ;=> false
-(four-of-a-kind? four-of-a-kind-hand) ;=> true
-
-(defn flush? [collname]
-  (if (= 1 (count (set (map suit collname)))) true false))
-
-(flush? pair-hand)  ;=> false
-(flush? flush-hand) ;=> true)
-
-
-(defn full-house? [collname]
-  (let [pair-data '(3 2)
-        isit (fn [coll] (if (= coll pair-data) true false))]
-  (isit (pairchecker (map rank collname)))))
-
-(full-house? three-of-a-kind-hand) ;=> false
-(full-house? full-house-hand)      ;=> true
-
-(defn two-pairs? [collname]
-  (let [pair-data ['(2 2 1) '(4 1)]
-        isit (fn [coll] (if (or (= coll (first pair-data))(= coll (second pair-data))) true false))]
-  (isit (pairchecker (map rank collname)))))
+(defn three-of-a-kind? [hand]
+  (let [ranks (map rank hand)
+        freqs (vals (frequencies ranks))]
+    (= (apply max freqs) 3)))
 
 
-(two-pairs? two-pairs-hand)      ;=> true
-(two-pairs? pair-hand)           ;=> false
-(two-pairs? four-of-a-kind-hand) ;=> true
+(defn four-of-a-kind? [hand]
+  (let [ranks (map rank hand)
+        freqs (vals (frequencies ranks))]
+    (= (apply max freqs) 4)))
+
+(defn flush? [hand]
+  (let [suits (map suit hand)
+        freqs (vals (frequencies suits))]
+    (= (apply max freqs) 5)))
+
+(defn full-house? [hand]
+  (let [ranks (map rank hand)
+        freqs (vals (frequencies ranks))]
+    (= (set freqs) #{2,3})))
+
+(defn two-pairs? [hand]
+  (let [ranks (map rank hand)
+        freqs (sort (vals (frequencies ranks)))]
+    (or
+      (= freqs [1,2,2])
+      (= freqs [1,4]))))
+
+(defn straight? [hand]
+  (let [ranks-ace-high (map rank hand)
+        ranks-ace-low (replace {14 1} ranks-ace-high)
+        low-1 (apply min ranks-ace-high)
+        low-2 (apply min ranks-ace-low)]
+    (or
+      (= (sort ranks-ace-high) (range low-1 (+ low-1 5)))
+      (= (sort ranks-ace-low) (range low-2 (+ low-2 5))))))
 
 
-(defn straight? [coll]
-  (let [colldata (sort (map rank coll))
-        mindata (apply min colldata)
-        maxdata (inc (apply max colldata))
-        fullrange (range mindata maxdata)]
-    (if (or (= colldata fullrange)
-            (= colldata '(2 3 4 5 14)))
-      true
-      false)))
 
-(straight? two-pairs-hand)             ;=> false
-(straight? straight-hand)              ;=> true
-(straight? low-ace-straight-hand)      ;=> true
-(straight? ["2H" "2D" "3H" "4H" "5H"]) ;=> false
-(straight? high-ace-straight-hand)     ;=> true
+(defn straight-flush? [hand]
+  (and
+    (straight? hand)
+    (flush? hand)))
 
-(defn straight-flush? [coll]
-  (and (straight? coll) (flush? coll)))
 
-(straight-flush? straight-hand)                ;=> false
-(straight-flush? flush-hand)                   ;=> false
-(straight-flush? straight-flush-hand)          ;=> true
-(straight-flush? low-ace-straight-flush-hand)  ;=> true
-(straight-flush? high-ace-straight-flush-hand) ;=> true
 
 (defn high-card? [hand]
-  true) ; All hands have a high card.
+  true)
 
-(defn value [coll]
-  (let [checkers #{[high-card? 0]  [pair? 1]
-                 [two-pairs? 2]  [three-of-a-kind? 3]
-                 [straight? 4]   [flush? 5]
-                 [full-house? 6] [four-of-a-kind? 7]
-                 [straight-flush? 8]}
-        funcs [map first checkers]
-        firstfuncs (second funcs)]
-;;     ((fn [funcsdata coll] (list funcsdata coll))
-;;     firstfuncs coll)
-;;     (list flush? "hello" firstfuncs)
-;;         (nth funcs 2)
-;;     (first (last funcs))
-      (type straight?)
-      (type (first checkers))
-      (last funcs)
+(def liste-parser #{ [pair?  1]
+                     [two-pairs? 2]
+                     [three-of-a-kind? 3]
+                     [straight? 4]
+                     [flush?  5]
+                     [full-house?  6]
+                     [four-of-a-kind?  7]
+                     [straight-flush?  8]})
 
-    ))
+(defn value [ hand ]
+;;   (apply max
+         (map (fn [pair]
+                    (if ((first pair) hand)
+;;                       (second pair)
+                      (type (first pair))
+                      0))
+                  liste-parser))
+;;   )
 
 
-(def minifunc (map first #{[straight? 1] [two-pairs? 4]}))
-(type minifunc)
+(def testli #{[pair? 1] [two-pairs? 2] [straight? 3]})
 
-;; (map (fn [mif]
-;; ;;        (apply mif pair-hand))
-;; ;;        (apply mif pair-hand))
-;; ;;        (mif pair-hand))
-;; ;;        (list `mif "/" two-pairs?)
-;;      (`mif two-pairs-hand))
-;;      minifunc)
+(map (fn [coll]
+       ()) testli)
 
-(two-pairs? two-pairs-hand)
+(defn val2 [hand]
+  (map (fn [pair]
+         (if ((first pair) hand)
+           (second pair)
+           0
+           )
+           ) testli))
+
+(defn val3 [coll]
+  (let [m [max min count]]
+    ((nth m 2) coll)))
+
+(val3 [3 2 1 4 5])
+
+
+
+(val2 high-seven)
+(val2 two-pairs-hand)
+(val2 straight-hand)
+
 
 (value high-seven)           ;=> 0
 (value pair-hand)            ;=> 1
@@ -185,3 +140,13 @@
 (value full-house-hand)      ;=> 6
 (value four-of-a-kind-hand)  ;=> 7
 (value straight-flush-hand)  ;=> 8
+
+;; 처음 찾은 방법
+;; https://github.com/iloveponies/p-p-p-pokerface/pull/891/commits/93c9cf892ecbdac8a4e65466acc7d34d3ad19153#diff-cb33a7278bd60af12841774e5bb4fe9aL33
+
+;; 단순한 방법
+;; https://github.com/iloveponies/p-p-p-pokerface/pull/865/commits/3829c89d9536fdd6ca98c7dfd313892eed861a6b#diff-cb33a7278bd60af12841774e5bb4fe9aL33
+
+;; 내가 바라는 방법
+;; https://github.com/iloveponies/p-p-p-pokerface/pull/846/commits/0a970b287f82b1862067455fc8ed8e227147d3c6#diff-cb33a7278bd60af12841774e5bb4fe9aR166
+
