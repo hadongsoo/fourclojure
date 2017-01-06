@@ -57,15 +57,20 @@
 (filter (pred-or pos? odd?) [1 2 -4 0 6 7 -3])  ;=> [1 2 6 7 -3]
 (filter (pred-or pos? even?) [1 2 -4 0 6 7 -3]) ;=> [1 2 -4 0 6 7]
 
-(defn whitespace? [character]
-  (Character/isWhitespace character))
+;; (defn whitespace? [character]
+;;   (Character/isWhitespace character))
 
-(whitespace? ["a"])
+;; (whitespace? [""])
 
-(defn blank? [string]
-  (map empty? (seq string)))
-;;   (map string? string))
+(clojure.string/blank? ["abc "])
+(defn blank? [str]
+  (every? #(Character/isWhitespace %) str))
 
+(map (fn [st](Character/isWhitespace st)) "abc ")
+
+
+;; 왜 .isWhitespace가 작동 안하나 했더니... 함수안에 데이터를 순차적으로 받게 만들어진 함수였다.
+;; 그냥 함수처럼 인자 하나 집어 넣으면 오류
 
 (blank? " \t\n\t ") ;=> true
 (blank? "  \t a")   ;=> false
