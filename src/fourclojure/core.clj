@@ -89,5 +89,69 @@
 (sequence-contains? :pony [])  ;=> false
 
 ;; 재귀가 정확하게 이해되진 않으나,
-;; 리스트내 1번째 값의 동작 + 나머지 값을 다시 함수에 입력 한다는 개념으로 이해하기 시작
+;; 리스트내 1번째 값의 동작  나머지 값을 다시 함수에 입력 한다는 개념으로 이해하기 시작
+
+
+(defn my-take-while [f coll]
+  (if (empty? coll)
+    '()
+    (if (f (first coll))
+      (cons (first coll) (my-take-while f (rest coll)))
+      '())))
+
+(my-take-while odd? [1 2 3 4])  ;=> (1)
+(my-take-while odd? [1 3 4 5])  ;=> (1 3)
+(my-take-while even? [1 3 4 5]) ;=> ()
+(my-take-while odd? [])         ;=> ()
+
+(defn my-drop-while [f coll]
+  (if (empty? coll)
+    '()
+    (if (f (first coll))
+      (my-drop-while f (rest coll))
+      coll
+      )))
+
+
+(my-drop-while odd? [1 2 3 4])  ;=> (2 3 4)
+(my-drop-while odd? [1 3 4 5])  ;=> (4 5)
+(my-drop-while even? [1 3 4 5]) ;=> (1 3 4 5)
+(my-drop-while odd? [])         ;=> ()
+
+
+(defn seq= [a-seq b-seq]
+  (cond
+    (and (empty? a-seq) (empty? b-seq)) true
+    (or (empty? a-seq) (empty? b-seq)) false
+    (not= (first a-seq) (first b-seq)) false
+    :else (seq= (rest a-seq) (rest b-seq))))
+
+(seq= [1 2 4] '(1 2 4))  ;=> true
+(seq= [1 2 3] [1 2 3 4]) ;=> false
+(seq= [1 3 5] [])        ;=> false
+
+;; 재귀를 사용할때는 재귀가 끝나는 조건이 분명히 나와있어야 한다. (당연한 것)
+;; true 의 결과가 나올때까지, rest가 없을 때까지 자신을 호출한다.
+
+
+(defn my-map [f seq-1 seq-2]
+  (if (and (first seq-1) (first seq-2))
+    (cons (f (first seq-1) (first seq-2)) (my-map f (rest seq-1) (rest seq-2)))
+    '()
+    ))
+
+(my-map + [1 2 3] [4 4 4])   ;=> (5 6 7)
+(my-map + [1 2 3 4] [0 0 0]) ;=> (1 2 3)
+(my-map + [1 2 3] [])        ;=> ()
+
+(defn indexer [a-seq]
+  (let [index (range 0 (count a-seq))]
+    (map vector index a-seq)))
+
+(indexer [:a :b :c :d :e])
+
+(defn consecutives [a-seq]
+  (map vector a-seq (rest a-seq)))
+
+(consecutives [1 2 3 4 5 6 7])
 
